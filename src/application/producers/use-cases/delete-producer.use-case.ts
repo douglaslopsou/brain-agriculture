@@ -1,29 +1,22 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IProducerRepository } from '../../../domain/producers/repositories/producer.repository.interface';
-import { ProducerOutputDto } from '../dto/producer-output.dto';
 import { BusinessRuleException } from '../../../domain/shared/exceptions/business-rule-exception';
 import { PRODUCER_REPOSITORY } from '../../../domain/producers/repositories/producer.repository.token';
 
 @Injectable()
-export class GetProducerUseCase {
+export class DeleteProducerUseCase {
   constructor(
     @Inject(PRODUCER_REPOSITORY)
     private readonly repository: IProducerRepository,
   ) {}
 
-  async execute(id: string): Promise<ProducerOutputDto> {
+  async execute(id: string): Promise<void> {
     const producer = await this.repository.findById(id);
 
     if (!producer) {
       throw new BusinessRuleException('Produtor não encontrado');
     }
 
-    return {
-      id: producer.getId(),
-      cpfCnpj: producer.getCpfCnpj(),
-      name: producer.getName(),
-      createdAt: producer.getCreatedAt(),
-      updatedAt: producer.getUpdatedAt(),
-    };
+    await this.repository.delete(id);
   }
 }

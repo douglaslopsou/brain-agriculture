@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { IProducerRepository } from '../../../domain/producers/repositories/producer.repository.interface';
 import { Producer } from '../../../domain/producers/entities/producer.entity';
 import { CpfCnpjValidatorService } from '../../../domain/producers/services/cpf-cnpj-validator.service';
 import { BusinessRuleException } from '../../../domain/shared/exceptions/business-rule-exception';
 import { CreateProducerInputDto } from '../dto/create-producer-input.dto';
 import { ProducerOutputDto } from '../dto/producer-output.dto';
+import { PRODUCER_REPOSITORY } from '../../../domain/producers/repositories/producer.repository.token';
 import { randomUUID } from 'crypto';
 
 @Injectable()
 export class CreateProducerUseCase {
   constructor(
+    @Inject(PRODUCER_REPOSITORY)
     private readonly repository: IProducerRepository,
     private readonly validatorService: CpfCnpjValidatorService,
   ) {}
